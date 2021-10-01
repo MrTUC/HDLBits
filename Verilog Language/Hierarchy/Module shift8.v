@@ -1,3 +1,9 @@
+/*
+ * The always block is used to create a logic with a muliplexer.
+ * The case structure will end up in a multiplexer and it can only
+ * used in an always @ block. The star indicates that it will produce
+ * logic. There should always be the default case.
+ */
 module top_module ( 
     input clk, 
     input [7:0] d, 
