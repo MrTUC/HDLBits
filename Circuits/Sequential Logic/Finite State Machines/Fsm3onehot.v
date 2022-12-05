@@ -1,7 +1,3 @@
-/*
- *  This solution does not match the expected behaviour. But since there is a 
- *  one hot coding there shouldn't be an "a" as a state.
- */
 module top_module(
     input in,
     input [3:0] state,
@@ -11,12 +7,12 @@ module top_module(
     parameter A=0, B=1, C=2, D=3;
 
     // State transition logic: Derive an equation for each state flip-flop.
-    assign next_state[A] = (~in)&(state[A] | state[C]);
-    assign next_state[B] = in&(~state[C]);
-    assign next_state[C] = (~in)&(state[B] | state[D]);
-    assign next_state[D] = in&state[C];
+    assign next_state[A] = ( state[A] & (~in) | (state[C] & (~in)) );
+    assign next_state[B] = ( state[A] & in ) | ( state[B] & in ) | ( state[D] & in );
+    assign next_state[C] = ( (state[B] & (~in) ) | ( state[D] & (~in) ));
+    assign next_state[D] = ( state[C] & in );
 
     // Output logic: 
-    assign out = ( state[D] )	?	1'b1	:	1'b0;
+    assign out = state[D] ? 1'b1 : 1'b0;
 
 endmodule
