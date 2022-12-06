@@ -15,27 +15,27 @@ module top_module(
         // State transition logic
         case ( state )
             LEFT:	if ( ~ground )
-                		next_state <= FALLINGLEFT;
+                		next_state = FALLINGLEFT;
                 	else if ( bump_left )
-                		next_state <= RIGHT;
+                		next_state = RIGHT;
             		else
-                        next_state <= state;
+                        next_state = state;
             RIGHT:	if ( ~ground )
-                		next_state <= FALLINGRIGHT;
+                		next_state = FALLINGRIGHT;
                 	else if ( bump_right )
-                		next_state <= LEFT;
+                		next_state = LEFT;
             		else
                         next_state <= state;
             FALLINGLEFT:	if (ground)
-                				next_state <= LEFT;
+                				next_state = LEFT;
             				else
-                        		next_state <= state;
+                        		next_state = state;
             FALLINGRIGHT:	if (ground)
-                				next_state <= RIGHT;
+                				next_state = RIGHT;
             				else
-                        		next_state <= state;
+                        		next_state = state;
             default:
-                		next_state <= state;
+                		next_state = state;
         endcase
     end
 
