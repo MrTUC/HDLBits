@@ -16,38 +16,12 @@ module top_module(
     always @(*) begin
         // State transition logic
         case ( state )
-            LEFT:			if ( ~ground )
-                				next_state <= FALLINGLEFT;
-            				else if ( dig )
-                                next_state <= DIGGINGLEFT;
-                			else if ( bump_left )
-                				next_state <= RIGHT;
-            				else
-                        		next_state <= state;
-            RIGHT:			if ( ~ground )
-                				next_state <= FALLINGRIGHT;
-            				else if ( dig )
-                                next_state <= DIGGINGRIGHT;
-                			else if ( bump_right )
-                				next_state <= LEFT;
-            				else
-                        		next_state <= state;
-            FALLINGLEFT:	if (ground)
-                				next_state <= LEFT;
-            				else
-                        		next_state <= state;
-            FALLINGRIGHT:	if (ground)
-                				next_state <= RIGHT;
-            				else
-                        		next_state <= state;
-            DIGGINGLEFT:	if ( ~ground )
-                				next_state <= FALLINGLEFT;
-            				else
-                        		next_state <= state;
-            DIGGINGRIGHT:	if (~ground )
-                				next_state <= FALLINGRIGHT;
-            				else
-                        		next_state <= state;
+            LEFT:			next_state <= ( ~ground ) ? FALLINGLEFT : ( dig ? DIGGINGLEFT : ( bump_left ? RIGHT : state ) );
+            RIGHT:			next_state <= ( ~ground ) ? FALLINGRIGHT: ( dig ? DIGGINGRIGHT : ( bump_right ? LEFT : state ) );
+            FALLINGLEFT:	next_state <= ( ground ) ? LEFT : state;
+            FALLINGRIGHT:	next_state <= ( ground ) ? RIGHT : state;
+            DIGGINGLEFT:	next_state <= ( ~ground ) ? FALLINGLEFT : state;
+            DIGGINGRIGHT:	next_state <= ( ~ground ) ? FALLINGRIGHT : state;
             default:
                 			next_state <= state;
         endcase
@@ -59,11 +33,16 @@ module top_module(
         else state <= next_state;
     end
 
-    // Output logic
-    assign 	walk_left 	= ( LEFT == state )? 1'b1 : 1'b0;
-    assign 	walk_right 	= ( RIGHT == state ) ? 1'b1 : 1'b0;
-    assign 	aaah 		= ( (state == FALLINGLEFT ) | (state == FALLINGRIGHT ) ) ? 1'b1 : 1'b0;
-    assign	digging		= ( ( DIGGINGRIGHT == state ) | ( DIGGINGLEFT == state ) ) ? 1'b1 : 1'b0;
-        
+    always @ (*) begin
+        case ( state )
+            LEFT:			{walk_left, walk_right, aaah, digging} = 4'b1000;
+            RIGHT:			{walk_left, walk_right, aaah, digging} = 4'b0100;
+            FALLINGLEFT:	{walk_left, walk_right, aaah, digging} = 4'b0010;
+            FALLINGRIGHT:	{walk_left, walk_right, aaah, digging} = 4'b0010;
+            DIGGINGLEFT:	{walk_left, walk_right, aaah, digging} = 4'b0001;
+            DIGGINGRIGHT:	{walk_left, walk_right, aaah, digging} = 4'b0001;
+            default:		{walk_left, walk_right, aaah, digging} = 'x;
+        endcase
+    end
     
 endmodule
