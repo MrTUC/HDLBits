@@ -13,15 +13,15 @@ module top_module(
         // State transition logic
         case ( state )
             LEFT:	if ( bump_left )
-                		next_state <= RIGHT;
+                		next_state = RIGHT;
             		else
-                        next_state <= state;
+                        next_state = state;
             RIGHT:	if ( bump_right )
-                		next_state <= LEFT;
+                		next_state = LEFT;
             		else
-                        next_state <= state;
+                        next_state = state;
             default:
-                		next_state <= state;
+                		next_state = state;
         endcase
     end
 
