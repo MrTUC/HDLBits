@@ -14,28 +14,12 @@ module top_module(
     always @(*) begin
         // State transition logic
         case ( state )
-            LEFT:	if ( ~ground )
-                		next_state = FALLINGLEFT;
-                	else if ( bump_left )
-                		next_state = RIGHT;
-            		else
-                        next_state = state;
-            RIGHT:	if ( ~ground )
-                		next_state = FALLINGRIGHT;
-                	else if ( bump_right )
-                		next_state = LEFT;
-            		else
-                        next_state <= state;
-            FALLINGLEFT:	if (ground)
-                				next_state = LEFT;
-            				else
-                        		next_state = state;
-            FALLINGRIGHT:	if (ground)
-                				next_state = RIGHT;
-            				else
-                        		next_state = state;
+            LEFT:			next_state <= ( ~ground ) ? FALLINGLEFT : ( bump_left ?  RIGHT : state );
+            RIGHT:			next_state <= ( ~ground ) ? FALLINGRIGHT : ( bump_right ? LEFT : state);
+            FALLINGLEFT:	next_state <= (ground) ? LEFT : state;
+            FALLINGRIGHT:	next_state <= (ground) ? RIGHT : state;
             default:
-                		next_state = state;
+                			next_state <= state;
         endcase
     end
 
@@ -49,6 +33,5 @@ module top_module(
     assign walk_left = (state == LEFT) ? 1'b1 : 1'b0;
     assign walk_right = (state == RIGHT) ? 1'b1 : 1'b0;
     assign aaah = ( (state == FALLINGLEFT ) | (state == FALLINGRIGHT ) ) ? 1'b1 : 1'b0;
-    
 
 endmodule
