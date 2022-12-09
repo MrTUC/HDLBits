@@ -21,9 +21,9 @@ module top_module(
     
     always @ ( posedge clk ) begin
         if (reset )
-            current_state = IDLE;
+            current_state <= IDLE;
         else
-            current_state = next_state;
+            current_state <= next_state;
     end
     
     always @ (*) begin
