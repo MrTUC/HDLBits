@@ -11,8 +11,8 @@ module top_module
         if ( reset )
             lfsr	<=	32'h00000001;
         else begin
-lfsr[31]	<=	lfsr[0];
-            lfsr[30]	<=	lfsr[31]^1'b0;;
+			lfsr[31]	<=	lfsr[0]^1'b0;
+            lfsr[30]	<=	lfsr[31];
             lfsr[29]	<=	lfsr[30];
             lfsr[28]	<=	lfsr[29];
             lfsr[27]	<=	lfsr[28];
